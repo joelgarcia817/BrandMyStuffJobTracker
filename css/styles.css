@@ -1,0 +1,57 @@
+
+.main-content
+{
+	padding : 0px 10px;
+}
+
+.jobs-header
+{
+	background-color : #e5e5e5;
+	color : #777;
+}
+
+.job-date-header
+{
+	color : #FF6600;
+}
+
+.job 
+{
+	width : 100%;
+}
+
+.job-name 
+{
+	font-size : 125%;
+}
+
+.job-type
+{
+	font-size : 80%;
+}
+
+.pad-top 
+{
+	padding-top : 10px !important;
+}
+
+.ui-header
+{
+	background-color: #C8DAEB !important;	
+}
+
+.add-edit-save-button
+{
+	margin-top: 15px;		
+}
+
+.comment
+{
+	border-bottom: solid 1px #777;
+}
+
+.comment-timestamp
+{
+	font-size: 80%;
+	color: #777;
+}

@@ -1,0 +1,14 @@
+
+
+CREATE TABLE ForgeRock
+	(`id` int, `productName` varchar(7), `description` varchar(55), 
+     `due_date` DATE)
+;
+	
+INSERT INTO ForgeRock
+	(`id`, `productName`, `description`, `due_date`)
+VALUES
+	(1, 'OpenIDM', 'Platform for building enterprise provisioning solutions', '2015-05-30'),
+	(2, 'OpenAM', 'Full-featured access management', '2015-05-30'),
+	(3, 'OpenDJ', 'Robust LDAP server for Java', '2015-05-30')
+;
