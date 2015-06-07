@@ -82,6 +82,23 @@ function jobDeleteButtonClicked(e) {
 	e.preventDefault();
 }
 
+function jobStatusChanged(e) {
+	var invc = $(e.target).data('invoicenumber');
+	var stat = $(e.target).val();
+
+	$.ajax({ url: 'ajax/updateJobStatus.php', 
+             data: {invoiceNumber: invc, newStatus: stat},
+             type: 'POST',          
+             success: jobUpdated, 
+             error: ajaxErrorHandler } );
+
+	function jobUpdated() { 			
+		//do nothing
+	}
+
+	e.preventDefault();
+}
+
 function stringToDate(str) {
 	var splt = str.split("-")
 	return new Date(splt[0], parseInt(splt[1], 10) - 1, splt[2]);
@@ -90,6 +107,7 @@ function stringToDate(str) {
 function eventWireUp() {
 	$('.new-btn').on('click', createNewJobButtonClicked);
 	$('.save-job-btn').on('click', saveJobButtonClicked);
+	$('.status-select').on('change', jobStatusChanged);
 	$(document.body).on('click', '.delete-button', jobDeleteButtonClicked)
 }
 

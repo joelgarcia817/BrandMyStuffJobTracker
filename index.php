@@ -47,6 +47,39 @@
 	    		elseif ($status == 5) { return 'Job Complete'; }
 			}
 
+			function create_status_drop_down($invoice_num, $type, $status) {
+
+				$html = "<select class='status-select' data-invoicenumber='". $invoice_num. "'>";
+				if ($type == 1) {
+					$html = $html. "<option value='0' ". ($status == 0 ? "selected" : ""). ">". get_job_status_string(0). "</option>";
+					$html = $html. "<option value='1' ". ($status == 1 ? "selected" : ""). ">". get_job_status_string(1). "</option>";
+					$html = $html. "<option value='2' ". ($status == 2 ? "selected" : ""). ">". get_job_status_string(2). "</option>";
+					$html = $html. "<option value='3' ". ($status == 3 ? "selected" : ""). ">". get_job_status_string(3). "</option>";
+					$html = $html. "<option value='5' ". ($status == 5 ? "selected" : ""). ">". get_job_status_string(5). "</option>";
+				}
+				elseif ($type == 2) {
+					$html = $html. "<option value='0' ". ($status == 0 ? "selected" : ""). ">". get_job_status_string(0). "</option>";
+					$html = $html. "<option value='1' ". ($status == 1 ? "selected" : ""). ">". get_job_status_string(1). "</option>";
+					$html = $html. "<option value='2' ". ($status == 2 ? "selected" : ""). ">". get_job_status_string(2). "</option>";
+					$html = $html. "<option value='4' ". ($status == 4 ? "selected" : ""). ">". get_job_status_string(4). "</option>";
+					$html = $html. "<option value='5' ". ($status == 5 ? "selected" : ""). ">". get_job_status_string(5). "</option>";
+				}
+				elseif ($type == 3) {
+					$html = $html. "<option value='0' ". ($status == 0 ? "selected" : ""). ">". get_job_status_string(0). "</option>";
+					$html = $html. "<option value='5' ". ($status == 5 ? "selected" : ""). ">". get_job_status_string(5). "</option>";
+				}
+				elseif ($type == 4) {
+					$html = $html. "<option value='0' ". ($status == 0 ? "selected" : ""). ">". get_job_status_string(0). "</option>";
+					$html = $html. "<option value='2' ". ($status == 2 ? "selected" : ""). ">". get_job_status_string(2). "</option>";
+					$html = $html. "<option value='3' ". ($status == 3 ? "selected" : ""). ">". get_job_status_string(3). "</option>";
+					$html = $html. "<option value='5' ". ($status == 5 ? "selected" : ""). ">". get_job_status_string(5). "</option>";
+				}
+
+				$html = $html. "</select>";
+
+				return $html;
+			}
+
 			date_default_timezone_set('America/Chicago');
 
 			$date = date('m/d/Y h:i:s a', time());
@@ -88,16 +121,20 @@
 
 	    			while ($row = mysql_fetch_array($results))
 					{
-					    echo '<tr class="job-row" data-invoicenumber="'. $row['invoice_num']. '">';
+						$invoice_num = trim($row['invoice_num']);
+						$type = $row['type'];
+						$status = $row['status'];
+
+					    echo '<tr class="job-row" data-invoicenumber="'. $invoice_num. '">';
 						echo '<td class="job-data-cell text-left">'. $row['name']. '</td>';
-						echo '<td class="job-data-cell text-left">'. get_job_type_string($row['type']). '</td>';
-						echo '<td class="job-data-cell text-left">'. get_job_status_string($row['status']). '</td>';
+						echo '<td class="job-data-cell text-left">'. get_job_type_string($type). '</td>';
+						echo '<td class="job-data-cell text-left">'. create_status_drop_down($invoice_num, $type, $status). '</td>';
 						echo '<td class="job-data-cell text-left">'. $row['invoice_num']. '</td>';
 						echo '<td class="job-data-cell text-right">'. $row['quantity']. '</td>';
 						echo '<td class="job-data-cell text-right">'. $row['order_date']. '</td>';						
 						echo '<td class="buttons_cell">';
 						echo '<div class="btn-group" role="group">';
-						echo '<button type="button" class="btn btn-link edit-button">Edit</button>';
+						echo '<button type="button" class="btn btn-link edit-button" data-toggle="modal" data-target="#divAddEditModal">Edit</button>';
 						echo '<button type="button" class="btn btn-link delete-button">Delete</button>';
 						echo '<button type="button" class="btn btn-link comments-button">Comments ('. $row['comment_count']. ')</button>';
 						echo '</div>';
