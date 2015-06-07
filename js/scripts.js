@@ -5,9 +5,9 @@ $(function() {
 })
 
 function clearCreateNewJobFields() {
-	$('#txtJobInvoiceNumber').val('');
+	$('#txtJobInvoiceNumber').val('').attr('disabled', false);
 	$('#txtJobName').val('');
-	$('#ddlJobType').val('1');
+	$('#ddlJobType').val('1').attr('disabled', false);
 	$('#txtQuantity').val('');
 	$('#txtDueDate').val('');
 }
@@ -38,6 +38,7 @@ function allCreateNewJobFieldsAreValid() {
 
 function createNewJobButtonClicked(e) {
 	clearCreateNewJobFields();
+	$('.save-job-btn').data('state', 'new');
 }
 
 function saveJobButtonClicked(e) {
@@ -50,18 +51,32 @@ function saveJobButtonClicked(e) {
 	                quantity: $.trim($('#txtQuantity').val()), 
 	                duedate: $.trim($('#txtDueDate').val())};
 
-		$.ajax({ url: 'ajax/createJob.php', 
+        var actionURL = ($(e.target).data('state') == 'new') ? 'ajax/createJob.php' : 'ajax/updateJob.php';
+
+		$.ajax({ url: actionURL, 
 	             data: json,
 	             type: 'POST',          
-	             success: jobCreated, 
+	             success: saveComplete, 
 	             error: ajaxErrorHandler } );
 
-		function jobCreated() { 
+		function saveComplete() { 
 			$('#divAddEditModal').modal('hide');
 			location.reload();
 		}
 	}
 	e.preventDefault();
+}
+
+function editButtonClicked(e) {
+	var row = $(e.target).closest('tr.job-row');
+
+	$('#txtJobInvoiceNumber').val(row.data('invoicenumber')).attr('disabled', true);
+	$('#txtJobName').val(row.find('td.name').text());
+	$('#ddlJobType').val(row.find('td.type').data('type')).attr('disabled', true);
+	$('#txtQuantity').val(row.find('td.qty').text());
+	$('#txtDueDate').val(row.data('duedate'));
+
+	$('.save-job-btn').data('state', 'edit');
 }
 
 function jobDeleteButtonClicked(e) {
@@ -108,7 +123,8 @@ function eventWireUp() {
 	$('.new-btn').on('click', createNewJobButtonClicked);
 	$('.save-job-btn').on('click', saveJobButtonClicked);
 	$('.status-select').on('change', jobStatusChanged);
-	$(document.body).on('click', '.delete-button', jobDeleteButtonClicked)
+	$('.delete-button').on('click', jobDeleteButtonClicked);
+	$('.edit-button').on('click', editButtonClicked);
 }
 
 function ajaxErrorHandler(err) {

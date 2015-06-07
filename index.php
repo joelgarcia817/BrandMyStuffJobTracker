@@ -125,12 +125,12 @@
 						$type = $row['type'];
 						$status = $row['status'];
 
-					    echo '<tr class="job-row" data-invoicenumber="'. $invoice_num. '">';
-						echo '<td class="job-data-cell text-left">'. $row['name']. '</td>';
-						echo '<td class="job-data-cell text-left">'. get_job_type_string($type). '</td>';
+					    echo '<tr class="job-row" data-invoicenumber="'. $invoice_num. '" data-duedate="'. $loop_date. '">';
+						echo '<td class="job-data-cell text-left name">'. $row['name']. '</td>';
+						echo '<td class="job-data-cell text-left type" data-type="'. $type. '">'. get_job_type_string($type). '</td>';
 						echo '<td class="job-data-cell text-left">'. create_status_drop_down($invoice_num, $type, $status). '</td>';
 						echo '<td class="job-data-cell text-left">'. $row['invoice_num']. '</td>';
-						echo '<td class="job-data-cell text-right">'. $row['quantity']. '</td>';
+						echo '<td class="job-data-cell text-right qty">'. $row['quantity']. '</td>';
 						echo '<td class="job-data-cell text-right">'. $row['order_date']. '</td>';						
 						echo '<td class="buttons_cell">';
 						echo '<div class="btn-group" role="group">';
