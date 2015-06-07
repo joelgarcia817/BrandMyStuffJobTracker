@@ -31,6 +31,22 @@
 			    return date('Y-m-d', $start);
 			}
 
+			function get_job_type_string($type) {
+				if ($type == 1) { return 'Screen Print'; }
+			    elseif ($type == 2) { return 'Embroidery'; }
+		    	elseif ($type == 3) { return 'Art Work'; }
+	    		elseif ($type == 4) { return 'Digital Print'; }
+			}
+
+			function get_job_status_string($status) {
+				if ($status == 0) { return 'Not Started'; }
+			    elseif ($status == 1) { return 'Ordered'; }
+		    	elseif ($status == 2) { return 'Art Work Created'; }
+	    		elseif ($status == 3) { return 'Art Work Approved'; }
+	    		elseif ($status == 4) { return 'Digitized Complete'; }
+	    		elseif ($status == 5) { return 'Job Complete'; }
+			}
+
 			date_default_timezone_set('America/Chicago');
 
 			$date = date('m/d/Y h:i:s a', time());
@@ -51,7 +67,7 @@
 			    $num_of_rows = mysql_numrows($results);
 
 		    	if ($num_of_rows == 0) {
-	    			echo "<div class='center-block'>No jobs found</div>";
+	    			echo "<div class='center-block no-jobs'>No jobs found</div>";
 		    	}
 		    	else {
 		    		echo '<table class="table table-hover table-condensed table-responsive">';
@@ -69,11 +85,11 @@
 					{
 					    echo '<tr>';
 						echo '<td>'. $row['name']. '</td>';
-						echo '<td>Embroidery</td>';
-						echo '<td>A16794</td>';
-						echo '<td>25</td>';
+						echo '<td>'. get_job_type_string($row['type']). '</td>';
+						echo '<td>'. $row['invoice_num']. '</td>';
+						echo '<td>'. $row['quantity']. '</td>';
 						echo '<td>'. $row['order_date']. '</td>';
-						echo '<td>Not Started</td>';
+						echo '<td>'. get_job_status_string($row['status']). '</td>';
 						echo '<td>';
 						echo '<button type="button" class="btn btn-link">Edit</button>';
 						echo '<button type="button" class="btn btn-link">Delete</button>';

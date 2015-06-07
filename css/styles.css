@@ -30,6 +30,12 @@
 	font-size : 80%;
 }
 
+.no-jobs
+{
+	color : #999;
+	font-style: italic;
+}
+
 .pad-top 
 {
 	padding-top : 10px !important;
