@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="css/styles.css">
 	<script src="js/jquery-1.11.3.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
+	<script src="js/scripts.js"></script>
 </head>
 <body>
 	<nav class="navbar navbar-default">
@@ -23,83 +24,69 @@
 
     <div class="main-content">
 
-    	<h3  class="job-date-header">Monday (5/4)</h3>
-		<table class="table table-hover table-condensed table-responsive">
-			<tr class="jobs-header">
-				<th>Name</th>
-				<th>Type</th>
-				<th>Inv#</th>
-				<th>Qty</th>
-				<th>Due Date</th>
-				<th>Status</th>
-				<th>&nbsp;</th>
-			</tr>
-			<tr>
-				<td>Programmathon Polos</td>
-				<td>Embroidery</td>
-				<td>A16794</td>
-				<td>25</td>
-				<td>06/03/2015</td>
-				<td>Not Started</td>
-				<td>
-					<button type="button" class="btn btn-link">Edit</button>
-					<button type="button" class="btn btn-link">Delete</button>
-					<button type="button" class="btn btn-link" data-toggle="modal" data-target="#divCommentsModal">Comments (2)</button>
-				</td>
-			</tr>
-			<tr>
-				<td>Programmathon Polos</td>
-				<td>Embroidery</td>
-				<td>A16794</td>
-				<td>25</td>
-				<td>06/03/2015</td>
-				<td>Not Started</td>
-				<td>
-					<button type="button" class="btn btn-link">Edit</button>
-					<button type="button" class="btn btn-link">Delete</button>
-					<button type="button" class="btn btn-link">Comments (2)</button>
-				</td>
-			</tr>
-		</table>
+    	<?php
+			function get_week_start_date($date) {
+			    $ts = strtotime($date);
+			    $start = (date('w', $ts) == 0) ? $ts : strtotime('last sunday', $ts);
+			    return date('Y-m-d', $start);
+			}
 
-		<h3  class="job-date-header">Tuesday (5/5)</h3>
-		<table class="table table-hover table-condensed table-responsive">
-			<tr class="jobs-header">
-				<th>Name</th>
-				<th>Type</th>
-				<th>Inv#</th>
-				<th>Qty</th>
-				<th>Due Date</th>
-				<th>Status</th>
-				<th>&nbsp;</th>
-			</tr>
-			<tr>
-				<td>Programmathon Polos</td>
-				<td>Embroidery</td>
-				<td>A16794</td>
-				<td>25</td>
-				<td>06/03/2015</td>
-				<td>Not Started</td>
-				<td>
-					<button type="button" class="btn btn-link">Edit</button>
-					<button type="button" class="btn btn-link">Delete</button>
-					<button type="button" class="btn btn-link">Comments (2)</button>
-				</td>
-			</tr>
-			<tr>
-				<td>Programmathon Polos</td>
-				<td>Embroidery</td>
-				<td>A16794</td>
-				<td>25</td>
-				<td>06/03/2015</td>
-				<td>Not Started</td>
-				<td>
-					<button type="button" class="btn btn-link">Edit</button>
-					<button type="button" class="btn btn-link">Delete</button>
-					<button type="button" class="btn btn-link">Comments (-)</button>
-				</td>
-			</tr>
-		</table>
+			date_default_timezone_set('America/Chicago');
+
+			$date = date('m/d/Y h:i:s a', time());
+
+			$start_date = get_week_start_date($date);
+			$stop_date = date('Y-m-d', strtotime($start_date. ' + 13 days'));
+			$loop_date = $start_date;
+
+			while (strtotime($loop_date) <= strtotime($stop_date)) {
+				
+				echo "<h3  class='job-date-header'>". date('l (m/d)', strtotime($loop_date)). "</h3>";
+
+				mysql_connect("data.brandmystuff.com", "joelgarcia", "ilovegod777") or die(mysql_error());
+			    mysql_select_db("brandmystuff1") or die(mysql_error());
+
+			    $query = "SELECT * FROM Jobs WHERE due_date ='". $loop_date. "';";
+			    $results = mysql_query($query) or die(mysql_error());
+			    $num_of_rows = mysql_numrows($results);
+
+		    	if ($num_of_rows == 0) {
+	    			echo "<div class='center-block'>No jobs found</div>";
+		    	}
+		    	else {
+		    		echo '<table class="table table-hover table-condensed table-responsive">';
+					echo '<tr class="jobs-header">';
+					echo '<th>Name</th>';
+					echo '<th>Type</th>';
+					echo '<th>Inv#</th>';
+					echo '<th>Qty</th>';
+					echo '<th>Order Date</th>';
+					echo '<th>Status</th>';
+					echo '<th>&nbsp;</th>';
+					echo '</tr>';
+
+	    			while ($row = mysql_fetch_array($results))
+					{
+					    echo '<tr>';
+						echo '<td>'. $row['name']. '</td>';
+						echo '<td>Embroidery</td>';
+						echo '<td>A16794</td>';
+						echo '<td>25</td>';
+						echo '<td>'. $row['order_date']. '</td>';
+						echo '<td>Not Started</td>';
+						echo '<td>';
+						echo '<button type="button" class="btn btn-link">Edit</button>';
+						echo '<button type="button" class="btn btn-link">Delete</button>';
+						echo '<button type="button" class="btn btn-link">Comments (2)</button>';
+						echo '</td>';
+						echo '</tr>';
+					}
+					echo '</table>';
+		    	}
+
+				$loop_date = date ("Y-m-d", strtotime("+1 day", strtotime($loop_date)));
+			}
+		?>	    	
 	</div>
 
 	<div id="divAddEditModal" class="modal fade">

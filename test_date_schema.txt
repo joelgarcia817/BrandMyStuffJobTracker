@@ -1,14 +1,21 @@
 
-
-CREATE TABLE ForgeRock
-	(`id` int, `productName` varchar(7), `description` varchar(55), 
-     `due_date` DATE)
-;
+CREATE TABLE Jobs
+	(invoice_num varchar(50) PRIMARY KEY, 
+     name varchar(200), 
+     type int, 
+     quantity int, 
+     status int, 
+     order_date date, 
+     due_date date);
 	
-INSERT INTO ForgeRock
-	(`id`, `productName`, `description`, `due_date`)
+INSERT INTO Jobs
+	(invoice_num, name, type, quantity, status, order_date, due_date)
 VALUES
-	(1, 'OpenIDM', 'Platform for building enterprise provisioning solutions', '2015-05-30'),
-	(2, 'OpenAM', 'Full-featured access management', '2015-05-30'),
-	(3, 'OpenDJ', 'Robust LDAP server for Java', '2015-05-30')
+	('1234567', 'Programmathon Polos', 1, 25, 1, '2015-5-25', '2015-5-30'),
+    ('1234568', 'These Polos', 1, 150, 2, '2015-5-21', '2015-5-31'),
+    ('1234569', 'Other Polos', 1, 100, 1, '2015-5-27', '2015-6-13'),
+    ('1234570', 'Team Jerseys', 2, 35, 1, '2015-5-14', '2015-6-14'), 
+    ('1234571', 'Team Jerseys', 2, 35, 1, '2015-5-14', '2015-6-14')
 ;
+
+ALTER TABLE JOBS ADD INDEX (due_date);
