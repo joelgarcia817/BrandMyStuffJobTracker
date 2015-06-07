@@ -14,6 +14,9 @@ function clearCreateNewJobFields() {
 
 function allCreateNewJobFieldsAreValid() {
 
+	var today = new Date();
+	today.setHours(0,0,0,0);
+
 	if ( $.trim($('#txtJobInvoiceNumber').val()) == '' ) {
 		alert('Please enter a valid invoice number'); return false;
 	}
@@ -25,6 +28,9 @@ function allCreateNewJobFieldsAreValid() {
 	}
 	else if ( $.trim($('#txtDueDate').val()) == '' ) {
 		alert('Please enter a valid due date'); return false;
+	}
+	else if ( stringToDate($.trim($('#txtDueDate').val())) < today ) {
+		alert('Due date cannot be in the past'); return false;
 	}
 
 	return true;
@@ -56,6 +62,11 @@ function saveJobButtonClicked(e) {
 		}
 	}
 	e.preventDefault();
+}
+
+function stringToDate(str) {
+	var splt = str.split("-")
+	return new Date(splt[0], parseInt(splt[1], 10) - 1, splt[2]);
 }
 
 function eventWireUp() {
