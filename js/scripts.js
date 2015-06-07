@@ -64,6 +64,24 @@ function saveJobButtonClicked(e) {
 	e.preventDefault();
 }
 
+function jobDeleteButtonClicked(e) {
+	var invc = $(e.target).closest('tr.job-row').data('invoicenumber');
+
+	if(confirm("Are you sure you want to delete this job?")) {
+		$.ajax({ url: 'ajax/deleteJob.php', 
+	             data: {invoiceNumber: invc},
+	             type: 'POST',          
+	             success: jobDeleted, 
+	             error: ajaxErrorHandler } );
+
+		function jobDeleted() { 			
+			location.reload();
+		}
+	}
+	
+	e.preventDefault();
+}
+
 function stringToDate(str) {
 	var splt = str.split("-")
 	return new Date(splt[0], parseInt(splt[1], 10) - 1, splt[2]);
@@ -72,6 +90,7 @@ function stringToDate(str) {
 function eventWireUp() {
 	$('.new-btn').on('click', createNewJobButtonClicked);
 	$('.save-job-btn').on('click', saveJobButtonClicked);
+	$(document.body).on('click', '.delete-button', jobDeleteButtonClicked)
 }
 
 function ajaxErrorHandler(err) {
