@@ -4,6 +4,11 @@
 	padding : 0px 10px;
 }
 
+.new-btn
+{
+	margin-right: 10px;
+}
+
 .jobs-header
 {
 	background-color : #e5e5e5;
@@ -60,4 +65,14 @@
 {
 	font-size: 80%;
 	color: #777;
+}
+
+.job-data-cell
+{
+	vertical-align: middle !important;
+}
+
+.buttons_cell
+{
+
 }

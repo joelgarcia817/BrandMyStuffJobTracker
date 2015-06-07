@@ -1,4 +1,10 @@
 
+CREATE TABLE Comments
+	(invoice_num varchar(50), 
+	 comment_id int, 
+	 text varchar(500), 
+	 PRIMARY KEY (invoice_num, comment_id));
+
 CREATE TABLE Jobs
 	(invoice_num varchar(50) PRIMARY KEY, 
      name varchar(200), 

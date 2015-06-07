@@ -16,7 +16,7 @@
     		<div class="navbar-header">      
       			<a class="navbar-brand" href="#">Job Tracker</a>
       		</div>
-      		<button type="button" class="btn btn-success navbar-btn pull-right" data-toggle="modal" data-target="#divAddEditModal">
+      		<button type="button" class="btn btn-success navbar-btn navbar-right new-btn" data-toggle="modal" data-target="#divAddEditModal">
       			Create New Job
   			</button>
 		</div>
@@ -62,7 +62,12 @@
 				mysql_connect("data.brandmystuff.com", "joelgarcia", "ilovegod777") or die(mysql_error());
 			    mysql_select_db("brandmystuff1") or die(mysql_error());
 
-			    $query = "SELECT * FROM Jobs WHERE due_date ='". $loop_date. "';";
+			    $query = "SELECT Jobs.invoice_num, name, type, quantity, order_date, status, ". 
+			             "sum(case when comment_id is not null then 1 else 0 end) comment_count ".
+			             "FROM Jobs ".
+			             "LEFT OUTER JOIN Comments ON Jobs.invoice_num = Comments.invoice_num ".
+			             "WHERE due_date ='". $loop_date. "' ". 
+			             "GROUP BY Jobs.invoice_num, name, type, quantity, order_date, status;";
 			    $results = mysql_query($query) or die(mysql_error());
 			    $num_of_rows = mysql_numrows($results);
 
@@ -70,30 +75,32 @@
 	    			echo "<div class='center-block no-jobs'>No jobs found</div>";
 		    	}
 		    	else {
-		    		echo '<table class="table table-hover table-condensed table-responsive">';
+		    		echo '<table class="table table-condensed table-responsive">';
 					echo '<tr class="jobs-header">';
-					echo '<th>Name</th>';
-					echo '<th>Type</th>';
-					echo '<th>Inv#</th>';
-					echo '<th>Qty</th>';
-					echo '<th>Order Date</th>';
-					echo '<th>Status</th>';
+					echo '<th class="text-left">Name</th>';
+					echo '<th class="text-left">Type</th>';
+					echo '<th class="text-left">Status</th>';
+					echo '<th class="text-left">Inv#</th>';
+					echo '<th class="text-right">Qty</th>';
+					echo '<th class="text-right">Order Date</th>';					
 					echo '<th>&nbsp;</th>';
 					echo '</tr>';
 
 	    			while ($row = mysql_fetch_array($results))
 					{
-					    echo '<tr>';
-						echo '<td>'. $row['name']. '</td>';
-						echo '<td>'. get_job_type_string($row['type']). '</td>';
-						echo '<td>'. $row['invoice_num']. '</td>';
-						echo '<td>'. $row['quantity']. '</td>';
-						echo '<td>'. $row['order_date']. '</td>';
-						echo '<td>'. get_job_status_string($row['status']). '</td>';
-						echo '<td>';
-						echo '<button type="button" class="btn btn-link">Edit</button>';
-						echo '<button type="button" class="btn btn-link">Delete</button>';
-						echo '<button type="button" class="btn btn-link">Comments (2)</button>';
+					    echo '<tr class="job-row" data-invoicenumber="'. $row['invoice_num']. '">';
+						echo '<td class="job-data-cell text-left">'. $row['name']. '</td>';
+						echo '<td class="job-data-cell text-left">'. get_job_type_string($row['type']). '</td>';
+						echo '<td class="job-data-cell text-left">'. get_job_status_string($row['status']). '</td>';
+						echo '<td class="job-data-cell text-left">'. $row['invoice_num']. '</td>';
+						echo '<td class="job-data-cell text-right">'. $row['quantity']. '</td>';
+						echo '<td class="job-data-cell text-right">'. $row['order_date']. '</td>';						
+						echo '<td class="buttons_cell">';
+						echo '<div class="btn-group" role="group">';
+						echo '<button type="button" class="btn btn-link edit_button">Edit</button>';
+						echo '<button type="button" class="btn btn-link delete_button">Delete</button>';
+						echo '<button type="button" class="btn btn-link comments_button">Comments ('. $row['comment_count']. ')</button>';
+						echo '</div>';
 						echo '</td>';
 						echo '</tr>';
 					}
@@ -129,7 +136,7 @@
 		  	  </div>
 		  	  <div class="form-group form-group-sm">
 			    <label for="txtQuantity">Quantity</label>
-			    <input type="text" class="form-control" id="txtQuantity" placeholder="Quantity">
+			    <input type="number" class="form-control" id="txtQuantity" placeholder="Quantity">
 			  </div>
 			  <div class="form-group form-group-sm">
 			    <label for="txtDueDate">Due Date</label>
@@ -139,7 +146,7 @@
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
-	        <button type="button" class="btn btn-success">Save</button>
+	        <button type="button" class="btn btn-success save-job-btn">Save</button>
 	      </div>
 	    </div>
 	  </div>
